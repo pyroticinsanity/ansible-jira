@@ -4,6 +4,7 @@
 # Install Dependencies
 
 - name: Dependencies for JIRA
-  yum: name={{ item }} state=installed
+  apt: name={{ item }} state=latest
   with_items:
-   - java-1.7.0-openjdk-devel
+   - openjdk-7-jre
+   - mysql-server
