@@ -1,3 +1,0 @@
----
-- name: JIRA service restart
-  service: name=jira state=restarted
