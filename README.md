@@ -3,9 +3,8 @@
 ## 1. QuickStart
 
 ```
-ansible-galaxy install fauzigo.jira
 # Deploy to a remote
-ansible-playbook jira.yml --extra-vars=/path/to/file_vars
+ansible-playbook jira.yml 
 
 ```
 
@@ -22,30 +21,26 @@ ansible-playbook jira.yml --extra-vars=/path/to/file_vars
 
 ## 2. Overview
 
-An Ansible playbook to automate the installation of Atlassian Jira, could posibly be used to keep it updated
+An Ansible playbook to automate the installation of Atlassian JIRA on a TurnKey Linux Debian system.
 
 The Task performed by the playbook are:
 
 	- install or check if java-1.7.0-openjdk-devel is installed
+        - install MySQL
 	- create a group for jira
 	- create a user that belong to the group created before
 	- Download the standalone tar file given a version
 	- extract the tar file
-	- create a symlink to an shorter dir name for the extracted dir
+	- create a symlink to a "current" directory for the extracted dir
 	- set the jira-home dir in the jira-application.properties file
 	- copy an init script or a service file depending on the EL major release 
-
+	- sets up the MySQL database and user as per the JIRA guidelines
+	- sets up a Java KeyStore for the SSL certificate
+	- modifies JIRA to use SSL
 
 ## 3. Requirements
 
 Ansible to be installed in the local machine.
-
-Because I'm using RHEL the easiest way to install  is:
-
-```
-yum install ansible
-```
-but as you are already here (github) you can try:
 
 ```
 git clone git://github.com/ansible/ansible.git --recursive
@@ -55,12 +50,12 @@ source ./hacking/env-setup
 
 ## 4. Usage
 
-1. `git clone http://github.com/fauzigo/ansible-jira` or `ansible-galaxy install fauzigo.jira`
-2. create a vars file in you group_vars dir or host_vars or simply add them directory on your main yml file
+1. `git clone http://github.com/pyroticinsanity/ansible-jira` 
+2. modify the jira/vars/main.yml to have your desired values
 3. run the Ansible playbook, the fastest way is:
 
 ```
-ansible-playbook jira.yml --extra-vars=/path/to/file_var
+ansible-playbook jira.yml 
 ```
 
 ### 4.1 Playbook Arguments
@@ -75,12 +70,16 @@ ansible-playbook jira.yml --extra-vars=/path/to/file_var
 - jira_version_file_sha256sum: you should have this 
 - jira_download_link: link to download the .tar.gz file (note: it will be concatenated with the version var)
 
-**TODO**: make gid, uid and sha256sum optional
+- mysql_root_password: configures MySql with the given root password 
+- mysql_jira_db: the MySQL database to store JIRA's data in
+- mysql_jira_user: the MySQL user that jira will use
+- mysql_jira_password: the MySQL password that jira will use
 
-Example:
+- ssl_alias: the SSL alias to use for the keystore
+- ssl_dname: the domain name to create the SSL certificate with. i.e. CN=jira,OU=SW,O=O,L=Edmontom,S=Alberta,C=CA
+- ssl_keypass: the keypass for the keystore
+ssl_storepass: the storepass for the keystore
 
-```
-ansible-playbook jira.yml --extra-vars 'jira_user_group=jira jira_user_group_gid=1000 jira_user=jira jira_user_uid=1000 jira_user_home_dir=/opt jira_home=/var/jira jira_download_link="http://www.atlassian.com/software/jira/downloads/binary/atlassian-jira" jira_version=6.3.9 jira_version_file_sha256sum=5ba3496347d78383e0201a80ecd0bafa9b6a2ea1e4841f4d843c1369d21da9a9'
 ```
 
 **TODO** use the handler after install to run the application
@@ -93,11 +92,4 @@ for releases version 6 or less [works with 7 as well]
 ```
 service jira start
 ```
-
-for releases version 7 
-```
-systemctl start jira.service
-```
-
-
 Enjoy
