@@ -1,0 +1,20 @@
+---
+jira_user_group: jira
+jira_user_group_gid: 120
+jira_user: jira
+jira_user_uid: 120
+jira_user_home_dir: /opt/jira
+jira_home: /var/opt/jira
+jira_version: 6.2.4
+jira_download_link: "http://www.atlassian.com/software/jira/downloads/binary/atlassian-jira"
+jira_version_file_sha256sum: 0e0e27f579897cc823423d3d216bf8e915340b15c4ff8ebec5437eef689d848b
+
+mysql_root_password: root_password
+mysql_jira_db: jiradb
+mysql_jira_user: jira
+mysql_jira_password: jira
+
+ssl_alias: jira
+ssl_dname: CN=jira,OU=SW,O=O,L=Edmonton,S=Alberta,C=CA
+ssl_keypass: changeit
+ssl_storepass: changeit
