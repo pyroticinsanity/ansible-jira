@@ -8,3 +8,4 @@
   with_items:
    - openjdk-7-jre
    - mysql-server
+   - python-mysqldb
